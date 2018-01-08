@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<style>
+	body {
+	overflow:hidden;
+	background:black;
+	}
+</style>
+	
+<body>
+	<section id="box">
+		
+	</section>
+	<script>
+		function Ball(x,y){
+			this.x=x;
+			this.y=y;
+			this.r=20;
+			var colors=["#FF9900","#FFFF00","#0099CC","#CC3399","#CC0066","#FF9999","#99CC33","#66CCCC","#99CCCC","#CC3399"];
+			this.color=colors[parseInt(Math.random()*colors.length)];
+			this.opacity = 0.4;
+			this.dx = parseInt(Math.random()*8-4);
+			this.dy = parseInt(Math.random()*8-4);
+			this.init();
+			ballarr.push(this);
+		}
+		Ball.prototype.init = function(){
+			this.dom = document.createElement("div");
+			this.dom.className="ball";
+			document.querySelector("#box").appendChild(this.dom);
+			this.dom.style.position = "absolute";
+			this.dom.style.width = this.r *2+"px";
+			this.dom.style.height = this.r*2+"px";
+			this.dom.style.left=this.x-this.r +"px";
+			this.dom.style.top=this.y-this.r+"px";
+			this.dom.style.borderRadius="50%";
+			this.dom.style.backgroundColor =this.color;
+			this.dom.style.opacity = this.opacity;
+		}
+		Ball.prototype.update=function(){
+			this.r+=3;
+			this.x+= this.dx;
+			this.y+= this.dy;
+			this.opacity-= 0.01;
+			if(this.opacity<0) this.goDie();
+			this.dom.style.width = this.r*2 +"px";
+			this.dom.style.height = this.r*2 +"px";
+			this.dom.style.left= this.x-this.r+"px";
+			this.dom.style.top=this.y-this.r+"px";
+			this.dom.style.opacity=this.opacity;
+		}
+		Ball.prototype.goDie = function(){
+			this.dom.parentNode.removeChild(this.dom);
+			for(var i=0;i<ballarr.length;i++){
+				if(ballarr[i] ===this){
+					ballarr.splice(i,1);
+				}
+			};
+		}
+		var ballarr = [];
+		setInterval(function(){
+			for (var i=0;i<ballarr.length;i++){
+				ballarr[i].update();
+			}
+		},20);
+		document.onmousemove = function(event){
+			var x = event.clientX;
+			var y = event.clientY;
+			new Ball(x,y);
+		}
+
+
+	</script>
+</body>
+</html>
